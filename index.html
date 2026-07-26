@@ -1,0 +1,479 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Form Input Pelanggan Bengkel</title>
+    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        :root {
+            --primary: #1e40af;
+            --primary-hover: #1d4ed8;
+            --accent: #f59e0b;
+            --bg-body: #f1f5f9;
+            --card-bg: #ffffff;
+            --text-dark: #0f172a;
+            --text-muted: #64748b;
+            --border-color: #e2e8f0;
+            --success: #10b981;
+            --danger: #ef4444;
+        }
+
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+            font-family: 'Plus Jakarta Sans', sans-serif;
+        }
+
+        body {
+            background-color: var(--bg-body);
+            color: var(--text-dark);
+            min-height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            padding: 24px;
+        }
+
+        .container {
+            width: 100%;
+            max-width: 850px;
+            background: var(--card-bg);
+            border-radius: 16px;
+            box-shadow: 0 10px 25px -5px rgba(0, 0, 0, 0.05), 0 8px 10px -6px rgba(0, 0, 0, 0.01);
+            overflow: hidden;
+            border: 1px solid var(--border-color);
+        }
+
+        .header {
+            background: linear-gradient(135deg, #0f172a 0%, #1e293b 100%);
+            color: #ffffff;
+            padding: 32px 40px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            position: relative;
+            border-bottom: 4px solid var(--accent);
+        }
+
+        .header-content {
+            display: flex;
+            align-items: center;
+            gap: 20px;
+        }
+
+        .logo-box {
+            width: 70px;
+            height: 70px;
+            background: rgba(255, 255, 255, 0.1);
+            border: 2px dashed rgba(255, 255, 255, 0.3);
+            border-radius: 12px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            overflow: hidden;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .logo-box:hover {
+            background: rgba(255, 255, 255, 0.2);
+            border-color: #ffffff;
+        }
+
+        .logo-box img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
+
+        .logo-box i {
+            font-size: 28px;
+            color: #cbd5e1;
+        }
+
+        .header-text h1 {
+            font-size: 22px;
+            font-weight: 700;
+            letter-spacing: -0.5px;
+            color: #ffffff;
+            margin-bottom: 4px;
+        }
+
+        .header-text p {
+            font-size: 13px;
+            color: #94a3b8;
+        }
+
+        .badge-live {
+            background: rgba(16, 185, 129, 0.2);
+            color: #34d399;
+            padding: 6px 12px;
+            border-radius: 20px;
+            font-size: 12px;
+            font-weight: 600;
+            display: flex;
+            align-items: center;
+            gap: 6px;
+        }
+
+        .badge-live::before {
+            content: '';
+            width: 8px;
+            height: 8px;
+            background: #34d399;
+            border-radius: 50%;
+            animation: pulse 1.5s infinite;
+        }
+
+        @keyframes pulse {
+            0% { transform: scale(0.95); opacity: 1; }
+            50% { transform: scale(1.2); opacity: 0.5; }
+            100% { transform: scale(0.95); opacity: 1; }
+        }
+
+        form {
+            padding: 36px 40px;
+        }
+
+        .section-title {
+            font-size: 14px;
+            font-weight: 700;
+            text-transform: uppercase;
+            letter-spacing: 0.8px;
+            color: var(--primary);
+            margin-bottom: 20px;
+            padding-bottom: 8px;
+            border-bottom: 2px solid #eff6ff;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .form-grid {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 20px;
+            margin-bottom: 28px;
+        }
+
+        .full-width {
+            grid-column: span 2;
+        }
+
+        .form-group {
+            display: flex;
+            flex-direction: column;
+            gap: 6px;
+        }
+
+        label {
+            font-size: 13px;
+            font-weight: 600;
+            color: #334155;
+            display: flex;
+            align-items: center;
+            gap: 6px;
+        }
+
+        label i {
+            color: #64748b;
+            font-size: 13px;
+        }
+
+        input, select, textarea {
+            width: 100%;
+            padding: 12px 14px;
+            border: 1.5px solid var(--border-color);
+            border-radius: 8px;
+            font-size: 14px;
+            color: var(--text-dark);
+            background-color: #f8fafc;
+            transition: all 0.2s ease;
+            outline: none;
+        }
+
+        input:focus, select:focus, textarea:focus {
+            background-color: #ffffff;
+            border-color: var(--primary);
+            box-shadow: 0 0 0 4px rgba(30, 64, 175, 0.1);
+        }
+
+        input[readonly] {
+            background-color: #e2e8f0;
+            color: #64748b;
+            cursor: not-allowed;
+            font-weight: 600;
+        }
+
+        .auto-tag {
+            font-size: 11px;
+            background: #e0e7ff;
+            color: #3730a3;
+            padding: 2px 6px;
+            border-radius: 4px;
+            margin-left: auto;
+            font-weight: 500;
+        }
+
+        textarea {
+            resize: vertical;
+            min-height: 80px;
+        }
+
+        .btn-submit {
+            width: 100%;
+            background-color: var(--primary);
+            color: #ffffff;
+            border: none;
+            padding: 14px 20px;
+            font-size: 15px;
+            font-weight: 600;
+            border-radius: 8px;
+            cursor: pointer;
+            transition: all 0.2s ease;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 10px;
+            box-shadow: 0 4px 12px rgba(30, 64, 175, 0.25);
+        }
+
+        .btn-submit:hover {
+            background-color: var(--primary-hover);
+            transform: translateY(-1px);
+        }
+
+        .btn-submit:active {
+            transform: translateY(0);
+        }
+
+        .alert-box {
+            display: none;
+            padding: 14px 16px;
+            border-radius: 8px;
+            font-size: 14px;
+            font-weight: 500;
+            margin-bottom: 20px;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .alert-success {
+            background-color: #d1fae5;
+            color: #065f46;
+            border: 1px solid #a7f3d0;
+        }
+
+        .alert-error {
+            background-color: #fee2e2;
+            color: #991b1b;
+            border: 1px solid #fecaca;
+        }
+
+        @media (max-width: 640px) {
+            body { padding: 12px; }
+            .header { padding: 24px 20px; flex-direction: column; text-align: center; gap: 16px; }
+            .header-content { flex-direction: column; }
+            form { padding: 24px 20px; }
+            .form-grid { grid-template-columns: 1fr; }
+            .full-width { grid-column: span 1; }
+        }
+    </style>
+</head>
+<body>
+
+<div class="container">
+    <div class="header">
+        <div class="header-content">
+            <div class="logo-box" onclick="document.getElementById('logoInput').click()">
+                <img id="logoPreview" src="" style="display:none;">
+                <i class="fa-solid fa-screwdriver-wrench" id="logoIcon"></i>
+            </div>
+            <input type="file" id="logoInput" accept="image/*" style="display:none" onchange="previewLogo(event)">
+            
+            <div class="header-text">
+                <h1 id="shopTitle">BENGKEL AUTO SERVICE</h1>
+                <p>Form Pendaftaran & Data Servis Pelanggan</p>
+            </div>
+        </div>
+        <div class="badge-live">
+            <span>Sistem Online</span>
+        </div>
+    </div>
+
+    <form id="customerForm">
+        <div id="alertBox" class="alert-box"></div>
+
+        <!-- Section 1: Info Transaksi & ID -->
+        <div class="section-title">
+            <i class="fa-solid fa-id-card"></i> Informasi Registrasi
+        </div>
+        <div class="form-grid">
+            <div class="form-group">
+                <label><i class="fa-solid fa-hashtag"></i> ID Customer <span class="auto-tag">Auto Generate</span></label>
+                <input type="text" id="idCustomer" name="idCustomer" placeholder="Menunggu sistem..." readonly>
+            </div>
+            <div class="form-group">
+                <label><i class="fa-solid fa-calendar-day"></i> Tanggal</label>
+                <input type="date" id="tanggal" name="tanggal" required>
+            </div>
+        </div>
+
+        <!-- Section 2: Data Diri Pelanggan -->
+        <div class="section-title">
+            <i class="fa-solid fa-user"></i> Data Pelanggan
+        </div>
+        <div class="form-grid">
+            <div class="form-group">
+                <label><i class="fa-solid fa-user-gear"></i> Nama Pelanggan</label>
+                <input type="text" id="nama" name="nama" placeholder="Masukkan nama lengkap..." required>
+            </div>
+            <div class="form-group">
+                <label><i class="fa-solid fa-layer-group"></i> Kategori Pelanggan</label>
+                <select id="kategori" name="kategori" required>
+                    <option value="">-- Pilih Kategori --</option>
+                    <option value="Reguler">Reguler</option>
+                    <option value="VIP">VIP</option>
+                    <option value="Member">Member</option>
+                    <option value="Corporate / Fleet">Corporate / Fleet</option>
+                </select>
+            </div>
+            <div class="form-group">
+                <label><i class="fa-solid fa-phone"></i> No. Handphone / WA</label>
+                <input type="tel" id="noHp" name="noHp" placeholder="Contoh: 081234567890" required>
+            </div>
+            <div class="form-group full-width">
+                <label><i class="fa-solid fa-location-dot"></i> Alamat</label>
+                <textarea id="alamat" name="alamat" placeholder="Masukkan alamat lengkap..." required></textarea>
+            </div>
+        </div>
+
+        <!-- Section 3: Data Kendaraan -->
+        <div class="section-title">
+            <i class="fa-solid fa-car"></i> Informasi Kendaraan
+        </div>
+        <div class="form-grid">
+            <div class="form-group">
+                <label><i class="fa-solid fa-rectangle-list"></i> No. Polisi (NOPOL)</label>
+                <input type="text" id="nopol" name="nopol" placeholder="Contoh: B 1234 ABC" style="text-transform:uppercase" required>
+            </div>
+            <div class="form-group">
+                <label><i class="fa-solid fa-car-side"></i> Jenis Kendaraan</label>
+                <input type="text" id="jenisKendaraan" name="jenisKendaraan" placeholder="Merek & Tipe (cth: Avanza Veloz / NMAX)" required>
+            </div>
+            <div class="form-group full-width">
+                <label><i class="fa-solid fa-gauge-high"></i> KM Awal (Odometer)</label>
+                <input type="number" id="kmAwal" name="kmAwal" placeholder="Contoh: 45000" required>
+            </div>
+        </div>
+
+        <button type="submit" class="btn-submit" id="btnSubmit">
+            <i class="fa-solid fa-paper-plane"></i> Simpan Data Pelanggan
+        </button>
+    </form>
+</div>
+
+<script>
+    // URL Web App Google Apps Script Anda
+    const SCRIPT_URL = "MASUKKAN_URL_WEB_APP_ANDA_DI_SINI";
+
+    // Set Default Tanggal Hari Ini
+    document.getElementById('tanggal').valueAsDate = new Date();
+
+    // Auto Preview Logo
+    function previewLogo(event) {
+        const file = event.target.files[0];
+        if (file) {
+            const reader = new FileReader();
+            reader.onload = function(e) {
+                document.getElementById('logoPreview').src = e.target.result;
+                document.getElementById('logoPreview').style.display = 'block';
+                document.getElementById('logoIcon').style.display = 'none';
+            }
+            reader.readAsDataURL(file);
+        }
+    }
+
+    // Generate Temporary ID preview di Frontend
+    function generateTempID() {
+        const date = new Date();
+        const yy = String(date.getFullYear()).slice(-2);
+        const mm = String(date.getMonth() + 1).padStart(2, '0');
+        const rand = Math.floor(1000 + Math.random() * 9000);
+        return `CUST-${yy}${mm}-${rand}`;
+    }
+    
+    document.getElementById('idCustomer').value = generateTempID();
+
+    // Submit Handler
+    document.getElementById('customerForm').addEventListener('submit', function(e) {
+        e.preventDefault();
+        
+        const btn = document.getElementById('btnSubmit');
+        const alertBox = document.getElementById('alertBox');
+        
+        btn.disabled = true;
+        btn.innerHTML = '<i class="fa-solid fa-spinner fa-spin"></i> Menyimpan...';
+        alertBox.style.display = 'none';
+
+        const formData = {
+            tanggal: document.getElementById('tanggal').value,
+            nama: document.getElementById('nama').value,
+            kategori: document.getElementById('kategori').value,
+            noHp: document.getElementById('noHp').value,
+            alamat: document.getElementById('alamat').value,
+            nopol: document.getElementById('nopol').value.toUpperCase(),
+            jenisKendaraan: document.getElementById('jenisKendaraan').value,
+            kmAwal: document.getElementById('kmAwal').value,
+            idCustomer: document.getElementById('idCustomer').value
+        };
+
+        if(SCRIPT_URL === "https://script.google.com/macros/s/AKfycbz_hQePFZ2hcuJfJV9VSdBCg3ruRWI2pbeAcoL82-OdASp8d7elmU4CE4urKF1Kwi27/exec") {
+            setTimeout(() => {
+                showAlert('success', 'Form berhasil disimulasikan! (Silakan masukkan URL Google Apps Script pada kodingan untuk menyimpan langsung ke Google Sheet). ID Generated: ' + formData.idCustomer);
+                btn.disabled = false;
+                btn.innerHTML = '<i class="fa-solid fa-paper-plane"></i> Simpan Data Pelanggan';
+                document.getElementById('customerForm').reset();
+                document.getElementById('tanggal').valueAsDate = new Date();
+                document.getElementById('idCustomer').value = generateTempID();
+            }, 1000);
+            return;
+        }
+
+        fetch(SCRIPT_URL, {
+            method: 'POST',
+            body: JSON.stringify(formData)
+        })
+        .then(res => res.json())
+        .then(response => {
+            if(response.result === 'success') {
+                showAlert('success', 'Data pelanggan berhasil disimpan ke Google Sheets! ID Customer: ' + response.idCustomer);
+                document.getElementById('customerForm').reset();
+                document.getElementById('tanggal').valueAsDate = new Date();
+                document.getElementById('idCustomer').value = generateTempID();
+            } else {
+                showAlert('error', 'Gagal menyimpan data: ' + response.error);
+            }
+        })
+        .catch(err => {
+            showAlert('error', 'Terjadi kesalahan koneksi: ' + err.message);
+        })
+        .finally(() => {
+            btn.disabled = false;
+            btn.innerHTML = '<i class="fa-solid fa-paper-plane"></i> Simpan Data Pelanggan';
+        });
+    });
+
+    function showAlert(type, message) {
+        const alertBox = document.getElementById('alertBox');
+        alertBox.className = 'alert-box alert-' + type;
+        alertBox.innerHTML = (type === 'success' ? '<i class="fa-solid fa-circle-check"></i> ' : '<i class="fa-solid fa-triangle-exclamation"></i> ') + message;
+        alertBox.style.display = 'flex';
+    }
+</script>
+
+</body>
+</html>
