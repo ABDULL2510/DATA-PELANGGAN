@@ -378,7 +378,7 @@
 
 <script>
     // URL Web App Google Apps Script Anda
-    const SCRIPT_URL = "MASUKKAN_URL_WEB_APP_ANDA_DI_SINI";
+    const SCRIPT_URL = "https://script.google.com/macros/s/AKfycbz_hQePFZ2hcuJfJV9VSdBCg3ruRWI2pbeAcoL82-OdASp8d7elmU4CE4urKF1Kwi27/exec";
 
     // Set Default Tanggal Hari Ini
     document.getElementById('tanggal').valueAsDate = new Date();
@@ -431,7 +431,7 @@
             idCustomer: document.getElementById('idCustomer').value
         };
 
-        if(SCRIPT_URL === "https://script.google.com/macros/s/AKfycbz_hQePFZ2hcuJfJV9VSdBCg3ruRWI2pbeAcoL82-OdASp8d7elmU4CE4urKF1Kwi27/exec") {
+        if(SCRIPT_URL === "MASUKKAN_URL_WEB_APP_ANDA_DI_SINI") {
             setTimeout(() => {
                 showAlert('success', 'Form berhasil disimulasikan! (Silakan masukkan URL Google Apps Script pada kodingan untuk menyimpan langsung ke Google Sheet). ID Generated: ' + formData.idCustomer);
                 btn.disabled = false;
