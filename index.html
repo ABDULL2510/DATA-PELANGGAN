@@ -64,7 +64,6 @@
             gap: 20px;
         }
 
-        /* Logo Proporsional */
         .logo-box {
             width: 75px;
             height: 75px;
@@ -280,7 +279,6 @@
     <div class="header">
         <div class="header-content">
             <div class="logo-box">
-                <!-- Logo dari Google Drive -->
                 <img id="logoPreview" src="https://lh3.googleusercontent.com/d/1GAPrkrsiup-gN5qlU4XcUlmkDuz1tDDj" alt="Logo Bengkel">
             </div>
             
@@ -289,7 +287,6 @@
                 <p>Data Service Pelanggan</p>
             </div>
         </div>
-        <!-- Badge mengikuti dropdown Admin -->
         <div class="badge-live">
             <span id="badgeAdminText">-</span>
         </div>
@@ -308,7 +305,6 @@
                 <input type="text" id="idCustomer" name="idCustomer" placeholder="Menunggu sistem..." readonly>
             </div>
             
-            <!-- Tab Dropdown Admin (Diatas Tanggal) -->
             <div class="form-group full-width">
                 <label><i class="fa-solid fa-user-shield"></i> Admin / Operator</label>
                 <select id="admin" name="admin" required onchange="updateBadgeAdmin(this.value)">
@@ -333,12 +329,9 @@
             </div>
             <div class="form-group">
                 <label><i class="fa-solid fa-layer-group"></i> Kategori Pelanggan</label>
+                <!-- Kategori Pelanggan sekarang dimuat otomatis dari Sheet -->
                 <select id="kategori" name="kategori" required>
-                    <option value="">-- Pilih Kategori --</option>
-                    <option value="Reguler">Reguler</option>
-                    <option value="VIP">VIP</option>
-                    <option value="Member">Member</option>
-                    <option value="Corporate / Fleet">Corporate / Fleet</option>
+                    <option value="">-- Memuat Kategori... --</option>
                 </select>
             </div>
             <div class="form-group">
@@ -388,31 +381,44 @@
         badgeText.textContent = val ? val : '-';
     }
 
-    // Ambil Daftar Admin dari Google Sheet "OPERATOR PELANGGAN"
-    function loadAdminList() {
-        fetch(SCRIPT_URL + "?action=getOperators")
+    // Ambil Data Dropdown Admin (Kolom A) & Kategori (Kolom B) dari Sheet "OPERATOR PELANGGAN"
+    function loadDropdownOptions() {
+        fetch(SCRIPT_URL + "?action=getDropdownData")
         .then(res => res.json())
         .then(data => {
-            const select = document.getElementById('admin');
-            select.innerHTML = '<option value="">-- Pilih Admin / Operator --</option>';
-            if(data && data.length > 0) {
-                data.forEach(operator => {
+            // Populate Dropdown Admin (Kolom A)
+            const selectAdmin = document.getElementById('admin');
+            selectAdmin.innerHTML = '<option value="">-- Pilih Admin / Operator --</option>';
+            if(data.operators && data.operators.length > 0) {
+                data.operators.forEach(op => {
                     const opt = document.createElement('option');
-                    opt.value = operator;
-                    opt.textContent = operator;
-                    select.appendChild(opt);
+                    opt.value = op;
+                    opt.textContent = op;
+                    selectAdmin.appendChild(opt);
+                });
+            }
+
+            // Populate Dropdown Kategori Pelanggan (Kolom B)
+            const selectKategori = document.getElementById('kategori');
+            selectKategori.innerHTML = '<option value="">-- Pilih Kategori --</option>';
+            if(data.categories && data.categories.length > 0) {
+                data.categories.forEach(cat => {
+                    const opt = document.createElement('option');
+                    opt.value = cat;
+                    opt.textContent = cat;
+                    selectKategori.appendChild(opt);
                 });
             }
         })
         .catch(err => {
-            console.error("Gagal mengambil data admin:", err);
-            const select = document.getElementById('admin');
-            select.innerHTML = '<option value="">-- Gagal Memuat Data --</option>';
+            console.error("Gagal mengambil data dropdown:", err);
+            document.getElementById('admin').innerHTML = '<option value="">-- Gagal Memuat Data --</option>';
+            document.getElementById('kategori').innerHTML = '<option value="">-- Gagal Memuat Data --</option>';
         });
     }
 
-    // Load Admin saat halaman siap
-    loadAdminList();
+    // Load Dropdown saat halaman siap
+    loadDropdownOptions();
 
     // Generate Temporary ID preview di Frontend
     function generateTempID() {
