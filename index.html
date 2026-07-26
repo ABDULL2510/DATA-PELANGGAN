@@ -383,39 +383,43 @@
 
     // Ambil Data Dropdown Admin (Kolom A) & Kategori (Kolom B) dari Sheet "OPERATOR PELANGGAN"
     function loadDropdownOptions() {
-        fetch(SCRIPT_URL + "?action=getDropdownData")
-        .then(res => res.json())
-        .then(data => {
-            // Populate Dropdown Admin (Kolom A)
-            const selectAdmin = document.getElementById('admin');
-            selectAdmin.innerHTML = '<option value="">-- Pilih Admin / Operator --</option>';
-            if(data.operators && data.operators.length > 0) {
-                data.operators.forEach(op => {
-                    const opt = document.createElement('option');
-                    opt.value = op;
-                    opt.textContent = op;
-                    selectAdmin.appendChild(opt);
-                });
-            }
+    const selectAdmin = document.getElementById('admin');
+    const selectKategori = document.getElementById('kategori');
 
-            // Populate Dropdown Kategori Pelanggan (Kolom B)
-            const selectKategori = document.getElementById('kategori');
-            selectKategori.innerHTML = '<option value="">-- Pilih Kategori --</option>';
-            if(data.categories && data.categories.length > 0) {
-                data.categories.forEach(cat => {
-                    const opt = document.createElement('option');
-                    opt.value = cat;
-                    opt.textContent = cat;
-                    selectKategori.appendChild(opt);
-                });
-            }
-        })
-        .catch(err => {
-            console.error("Gagal mengambil data dropdown:", err);
-            document.getElementById('admin').innerHTML = '<option value="">-- Gagal Memuat Data --</option>';
-            document.getElementById('kategori').innerHTML = '<option value="">-- Gagal Memuat Data --</option>';
-        });
-    }
+    fetch(SCRIPT_URL + "?action=getDropdownData", {
+        method: "GET",
+        redirect: "follow"
+    })
+    .then(res => res.json())
+    .then(data => {
+        // Isi Dropdown Admin
+        selectAdmin.innerHTML = '<option value="">-- Pilih Admin / Operator --</option>';
+        if (data.operators && data.operators.length > 0) {
+            data.operators.forEach(op => {
+                const opt = document.createElement('option');
+                opt.value = op;
+                opt.textContent = op;
+                selectAdmin.appendChild(opt);
+            });
+        }
+
+        // Isi Dropdown Kategori
+        selectKategori.innerHTML = '<option value="">-- Pilih Kategori --</option>';
+        if (data.categories && data.categories.length > 0) {
+            data.categories.forEach(cat => {
+                const opt = document.createElement('option');
+                opt.value = cat;
+                opt.textContent = cat;
+                selectKategori.appendChild(opt);
+            });
+        }
+    })
+    .catch(err => {
+        console.error("Gagal mengambil data dropdown:", err);
+        selectAdmin.innerHTML = '<option value="">-- Gagal Memuat Data --</option>';
+        selectKategori.innerHTML = '<option value="">-- Gagal Memuat Data --</option>';
+    });
+}
 
     // Load Dropdown saat halaman siap
     loadDropdownOptions();
