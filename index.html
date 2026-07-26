@@ -64,34 +64,24 @@
             gap: 20px;
         }
 
+        /* Logo Proporsional */
         .logo-box {
-            width: 70px;
-            height: 70px;
-            background: rgba(255, 255, 255, 0.1);
-            border: 2px dashed rgba(255, 255, 255, 0.3);
+            width: 75px;
+            height: 75px;
+            background: rgba(255, 255, 255, 0.05);
+            border: 1px solid rgba(255, 255, 255, 0.2);
             border-radius: 12px;
             display: flex;
             align-items: center;
             justify-content: center;
             overflow: hidden;
-            cursor: pointer;
-            transition: all 0.3s ease;
-        }
-
-        .logo-box:hover {
-            background: rgba(255, 255, 255, 0.2);
-            border-color: #ffffff;
+            padding: 5px;
         }
 
         .logo-box img {
-            width: 100%;
-            height: 100%;
-            object-fit: cover;
-        }
-
-        .logo-box i {
-            font-size: 28px;
-            color: #cbd5e1;
+            max-width: 100%;
+            max-height: 100%;
+            object-fit: contain;
         }
 
         .header-text h1 {
@@ -110,13 +100,14 @@
         .badge-live {
             background: rgba(16, 185, 129, 0.2);
             color: #34d399;
-            padding: 6px 12px;
+            padding: 6px 14px;
             border-radius: 20px;
             font-size: 12px;
             font-weight: 600;
             display: flex;
             align-items: center;
-            gap: 6px;
+            gap: 8px;
+            text-transform: uppercase;
         }
 
         .badge-live::before {
@@ -288,19 +279,19 @@
 <div class="container">
     <div class="header">
         <div class="header-content">
-            <div class="logo-box" onclick="document.getElementById('logoInput').click()">
-                <img id="logoPreview" src="" style="display:none;">
-                <i class="fa-solid fa-screwdriver-wrench" id="logoIcon"></i>
+            <div class="logo-box">
+                <!-- Logo dari Google Drive -->
+                <img id="logoPreview" src="https://lh3.googleusercontent.com/d/1GAPrkrsiup-gN5qlU4XcUlmkDuz1tDDj" alt="Logo Bengkel">
             </div>
-            <input type="file" id="logoInput" accept="image/*" style="display:none" onchange="previewLogo(event)">
             
             <div class="header-text">
                 <h1 id="shopTitle">BANG SURYA AC</h1>
                 <p>Data Service Pelanggan</p>
             </div>
         </div>
+        <!-- Badge mengikuti dropdown Admin -->
         <div class="badge-live">
-            <span>SHINTA</span>
+            <span id="badgeAdminText">-</span>
         </div>
     </div>
 
@@ -312,11 +303,20 @@
             <i class="fa-solid fa-id-card"></i> Informasi Registrasi
         </div>
         <div class="form-grid">
-            <div class="form-group">
+            <div class="form-group full-width">
                 <label><i class="fa-solid fa-hashtag"></i> ID Customer <span class="auto-tag">Auto Generate</span></label>
                 <input type="text" id="idCustomer" name="idCustomer" placeholder="Menunggu sistem..." readonly>
             </div>
-            <div class="form-group">
+            
+            <!-- Tab Dropdown Admin (Diatas Tanggal) -->
+            <div class="form-group full-width">
+                <label><i class="fa-solid fa-user-shield"></i> Admin / Operator</label>
+                <select id="admin" name="admin" required onchange="updateBadgeAdmin(this.value)">
+                    <option value="">-- Memuat Operator... --</option>
+                </select>
+            </div>
+
+            <div class="form-group full-width">
                 <label><i class="fa-solid fa-calendar-day"></i> Tanggal</label>
                 <input type="date" id="tanggal" name="tanggal" required>
             </div>
@@ -377,25 +377,42 @@
 </div>
 
 <script>
-    // URL Web App Google Apps Script Anda
-    const SCRIPT_URL = "https://script.google.com/macros/s/AKfycbyv5_1qxtSypeStItd3-RyMPB690z_RUF80WnUSv2BV3Pi5dkyV6Qoq6zHW1S0zTd4J/exec";
+    const SCRIPT_URL = "https://script.google.com/macros/s/AKfycbz073o1s-HuZiwMcJd1OzXb_2L1aV_zklEzPxDNYdnfQLXETB1qxH6QTlaq_sAcuLun/exec";
 
     // Set Default Tanggal Hari Ini
     document.getElementById('tanggal').valueAsDate = new Date();
 
-    // Auto Preview Logo
-    function previewLogo(event) {
-        const file = event.target.files[0];
-        if (file) {
-            const reader = new FileReader();
-            reader.onload = function(e) {
-                document.getElementById('logoPreview').src = e.target.result;
-                document.getElementById('logoPreview').style.display = 'block';
-                document.getElementById('logoIcon').style.display = 'none';
-            }
-            reader.readAsDataURL(file);
-        }
+    // Auto Update Badge Admin dari Dropdown
+    function updateBadgeAdmin(val) {
+        const badgeText = document.getElementById('badgeAdminText');
+        badgeText.textContent = val ? val : '-';
     }
+
+    // Ambil Daftar Admin dari Google Sheet "OPERATOR PELANGGAN"
+    function loadAdminList() {
+        fetch(SCRIPT_URL + "?action=getOperators")
+        .then(res => res.json())
+        .then(data => {
+            const select = document.getElementById('admin');
+            select.innerHTML = '<option value="">-- Pilih Admin / Operator --</option>';
+            if(data && data.length > 0) {
+                data.forEach(operator => {
+                    const opt = document.createElement('option');
+                    opt.value = operator;
+                    opt.textContent = operator;
+                    select.appendChild(opt);
+                });
+            }
+        })
+        .catch(err => {
+            console.error("Gagal mengambil data admin:", err);
+            const select = document.getElementById('admin');
+            select.innerHTML = '<option value="">-- Gagal Memuat Data --</option>';
+        });
+    }
+
+    // Load Admin saat halaman siap
+    loadAdminList();
 
     // Generate Temporary ID preview di Frontend
     function generateTempID() {
@@ -420,6 +437,8 @@
         alertBox.style.display = 'none';
 
         const formData = {
+            idCustomer: document.getElementById('idCustomer').value,
+            admin: document.getElementById('admin').value,
             tanggal: document.getElementById('tanggal').value,
             nama: document.getElementById('nama').value,
             kategori: document.getElementById('kategori').value,
@@ -427,21 +446,8 @@
             alamat: document.getElementById('alamat').value,
             nopol: document.getElementById('nopol').value.toUpperCase(),
             jenisKendaraan: document.getElementById('jenisKendaraan').value,
-            kmAwal: document.getElementById('kmAwal').value,
-            idCustomer: document.getElementById('idCustomer').value
+            kmAwal: document.getElementById('kmAwal').value
         };
-
-        if(SCRIPT_URL === "MASUKKAN_URL_WEB_APP_ANDA_DI_SINI") {
-            setTimeout(() => {
-                showAlert('success', 'Form berhasil disimulasikan! (Silakan masukkan URL Google Apps Script pada kodingan untuk menyimpan langsung ke Google Sheet). ID Generated: ' + formData.idCustomer);
-                btn.disabled = false;
-                btn.innerHTML = '<i class="fa-solid fa-paper-plane"></i> Simpan Data Pelanggan';
-                document.getElementById('customerForm').reset();
-                document.getElementById('tanggal').valueAsDate = new Date();
-                document.getElementById('idCustomer').value = generateTempID();
-            }, 1000);
-            return;
-        }
 
         fetch(SCRIPT_URL, {
             method: 'POST',
@@ -450,10 +456,11 @@
         .then(res => res.json())
         .then(response => {
             if(response.result === 'success') {
-                showAlert('success', 'Data pelanggan berhasil disimpan ke Google Sheets! ID Customer: ' + response.idCustomer);
+                showAlert('success', 'Data pelanggan berhasil disimpan! ID Customer: ' + response.idCustomer);
                 document.getElementById('customerForm').reset();
                 document.getElementById('tanggal').valueAsDate = new Date();
                 document.getElementById('idCustomer').value = generateTempID();
+                updateBadgeAdmin('-');
             } else {
                 showAlert('error', 'Gagal menyimpan data: ' + response.error);
             }
