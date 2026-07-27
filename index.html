@@ -369,7 +369,7 @@
 </div>
 
 <script>
-    const SCRIPT_URL = "https://script.google.com/macros/s/AKfycbxnsaRyvjrDyX9wdC7i0XjZQn84Tq4qRCwQJxTEkJrC9eT0IE0ceDkBjrC5RlsTYrNK/exec";
+    const SCRIPT_URL = "https://script.google.com/macros/s/AKfycbwl9jqmHezZ77-0Zh-ezF--fdTzxZzQftLp1EKTx9g_mpjaPvR_Ub2LfDaCYOaxdS5o/exec";
 
     // Set Default Tanggal Hari Ini
     document.getElementById('tanggal').valueAsDate = new Date();
@@ -380,7 +380,7 @@
         badgeText.textContent = val ? val : '-';
     }
 
-    // Ambil Data Dropdown dengan penanganan Redirect Google Apps Script
+    // Ambil Data Dropdown
     function loadDropdownOptions() {
         const selectAdmin = document.getElementById('admin');
         const selectKategori = document.getElementById('kategori');
@@ -391,7 +391,6 @@
         })
         .then(res => res.json())
         .then(data => {
-            // Populate Admin / Operator
             selectAdmin.innerHTML = '<option value="">-- Pilih Admin / Operator --</option>';
             if (data.operators && data.operators.length > 0) {
                 data.operators.forEach(op => {
@@ -404,7 +403,6 @@
                 selectAdmin.innerHTML = '<option value="">-- Tidak Ada Data Operator --</option>';
             }
 
-            // Populate Kategori
             selectKategori.innerHTML = '<option value="">-- Pilih Kategori --</option>';
             if (data.categories && data.categories.length > 0) {
                 data.categories.forEach(cat => {
@@ -424,7 +422,6 @@
         });
     }
 
-    // Load Dropdown saat halaman siap
     loadDropdownOptions();
 
     // Generate Temporary ID
@@ -438,7 +435,7 @@
     
     document.getElementById('idCustomer').value = generateTempID();
 
-    // Submit Handler dengan mode no-cors fallback jika diperlukan
+    // Submit Handler POST dengan Header Text/Plain Bypass CORS
     document.getElementById('customerForm').addEventListener('submit', function(e) {
         e.preventDefault();
         
@@ -464,6 +461,9 @@
 
         fetch(SCRIPT_URL, {
             method: 'POST',
+            headers: {
+                'Content-Type': 'text/plain;charset=utf-8'
+            },
             body: JSON.stringify(formData)
         })
         .then(res => res.json())
